@@ -82,6 +82,7 @@ with tf.device("/GPU:0"):
             # Conv layer
             conv = Convolution1D(kernel_size=kernel_size, filters=filters, border_mode='same')(emb)
             conv = ELU()(conv)
+            conv = MaxPooling1D(5)(conv)
             conv = Lambda(sum_1d, output_shape=(filters,))(conv)
             conv = Dropout(0.5)(conv)
 
@@ -131,6 +132,9 @@ with tf.device("/GPU:0"):
 with tf.device("/GPU:0"):
     epochs = 10
     batch_size = 16
+
+
+
 
     model = conv_fully()
     model.fit(X_train, y_train, epochs=epochs, batch_size=batch_size)
