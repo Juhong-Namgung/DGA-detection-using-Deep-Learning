@@ -29,7 +29,8 @@ class Preprocessor:
     def load_data(__self__):
         # Load data
         DATA_HOME ='../data/'
-        df = pd.read_csv(DATA_HOME + 'dga_label_shuffle.csv',encoding='ISO-8859-1', sep=',')
+        df = pd.read_csv(DATA_HOME + 'dga_label.csv',encoding='ISO-8859-1', sep=',')
+        #df = pd.read_csv(DATA_HOME + 'sample.csv',encoding='ISO-8859-1', sep=',')
 
         # Convert domain string to integer
         # URL 알파벳을 숫자로 변경
@@ -51,19 +52,19 @@ class Preprocessor:
 
         return X_train, X_test, y_train, y_test
 
-    def precision(y_true, y_pred):
+    def precision(self, y_true, y_pred):
         true_positives = K.sum(K.round(K.clip(y_true * y_pred, 0, 1)))
         predicted_positives = K.sum(K.round(K.clip(y_pred, 0, 1)))
         precision = true_positives / (predicted_positives + K.epsilon())
         return precision
 
-    def recall(y_true, y_pred):
+    def recall(self, y_true, y_pred):
         true_positives = K.sum(K.round(K.clip(y_true * y_pred, 0, 1)))
         possible_positives = K.sum(K.round(K.clip(y_true, 0, 1)))
         recall = true_positives / (possible_positives + K.epsilon())
         return recall
 
-    def fbeta_score(y_true, y_pred, beta=1):
+    def fbeta_score(self, y_true, y_pred, beta=1):
         if beta < 0:
             raise ValueError('The lowest choosable beta is zero (only precision).')
 
@@ -71,14 +72,12 @@ class Preprocessor:
         if K.sum(K.round(K.clip(y_true, 0, 1))) == 0:
 
             return 0
-        p = Preprocessor.precision(y_true, y_pred)
-        r = Preprocessor.recall(y_true, y_pred)
+        p = Preprocessor.precision(self, y_true, y_pred)
+        r = Preprocessor.recall(self, y_true, y_pred)
         bb = beta ** 2
         fbeta_score = (1 + bb) * (p * r) / (bb * p + r + K.epsilon())
         return fbeta_score
 
-    def fmeasure(y_true, y_pred):
-        return Preprocessor.fbeta_score(y_true, y_pred, beta=1)
-
-
+    def fmeasure(self, y_true, y_pred):
+        return Preprocessor.fbeta_score(self, y_true, y_pred, beta=1)
 
