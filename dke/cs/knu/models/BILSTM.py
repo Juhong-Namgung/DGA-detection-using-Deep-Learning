@@ -27,7 +27,7 @@ with tf.device("/GPU:0"):
                         input_length=max_len, dropout=0.2, W_regularizer=W_reg)(main_input)
 
         # LSTM layer
-        lstm = Bidirectional(LSTM(units=128, return_sequences=True, dropout=0.2, recurrent_dropout=0.2))(emb)
+        lstm = Bidirectional(LSTM(units=128, recurrent_dropout=0.2))(emb)
         lstm = Dropout(0.5)(lstm)
 
         # Output layer (last fully connected layer)
