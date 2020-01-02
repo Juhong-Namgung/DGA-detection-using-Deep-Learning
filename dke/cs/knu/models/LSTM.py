@@ -9,7 +9,8 @@ from keras.optimizers import Adam
 import matplotlib.pyplot as plt
 from sklearn import metrics
 from sklearn.metrics import classification_report
-from . import model_preproecess
+#from . import model_preproecess
+import model_preproecess
 
 import warnings
 warnings.filterwarnings("ignore")
@@ -29,13 +30,12 @@ with tf.device("/GPU:0"):
         lstm = Dropout(0.5)(lstm)
 
         # Output layer (last fully connected layer)
-        output = Dense(20, activation='sigmoid', name='output')(lstm)
+        output = Dense(21, activation='sigmoid', name='output')(lstm)
 
         # Compile model and define optimizer
         model = Model(input=[main_input], output=[output])
         adam = Adam(lr=1e-4, beta_1=0.9, beta_2=0.999, epsilon=1e-08, decay=0.0)
-        model.compile(optimizer=adam, loss='categorical_crossentropy',
-                      metrics=['accuracy', preprocess.fmeasure, preprocess.recall, preprocess.precision])
+        model.compile(optimizer=adam, loss='categorical_crossentropy',  metrics=['accuracy', preprocess.fmeasure, preprocess.recall, preprocess.precision])
 
         return model
 
@@ -52,17 +52,17 @@ with tf.device("/GPU:0"):
 
     history_dict = history.history
     print(history_dict.keys())
-    epochs = range(1, len(history_dict['loss']) + 1)
+    #epochs = range(1, len(history_dict['loss']) + 1)
 
     # "bo" is for "blue dot"
-    plt.plot(epochs, history_dict['fmeasure'], 'r',label='f1')
-    plt.plot(epochs, history_dict['precision'], 'g',label='precision')
-    plt.plot(epochs, history_dict['recall'], 'k',label='recall')
+    #plt.plot(epochs, history_dict['fmeasure'], 'r',label='f1')
+    #plt.plot(epochs, history_dict['precision'], 'g',label='precision')
+    #plt.plot(epochs, history_dict['recall'], 'k',label='recall')
 
-    plt.xlabel('Epochs')
-    plt.grid()
-    plt.legend(loc=1)
-    plt.show()
+    #plt.xlabel('Epochs')
+    #plt.grid()
+    #plt.legend(loc=1)
+    #plt.show()
 
     y_pred_class_prob = model.predict(X_test, batch_size=64)
     y_pred_class = np.argmax(y_pred_class_prob, axis=1)
@@ -73,7 +73,7 @@ with tf.device("/GPU:0"):
     print ("recall" , metrics.recall_score(y_val_class, y_pred_class, average = 'weighted'))
     print ("f1" , metrics.f1_score(y_val_class, y_pred_class, average = 'weighted'))
 
-    print(classification_report(y_val_class, y_pred_class))
+    print(classification_report(y_val_class, y_pred_class, digits=4))
 
     # Save final training model
     # model_name = "LSTM"
