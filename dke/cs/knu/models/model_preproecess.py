@@ -30,21 +30,20 @@ class Preprocessor:
         # Load data
         DATA_HOME ='../data/'
         df = pd.read_csv(DATA_HOME + 'dga_label.csv',encoding='ISO-8859-1', sep=',')
-        #df = pd.read_csv(DATA_HOME + 'sample.csv',encoding='ISO-8859-1', sep=',')
 
         # Convert domain string to integer
         # URL 알파벳을 숫자로 변경
         url_int_tokens = [[printable.index(x) + 1 for x in url if x in printable] for url in df.domain]
 
         # Padding domain integer max_len=74
-        # 최대길이 74로 지정
-        max_len = 74
+        # 최대길이 77로 지정
+        max_len = 77
 
         X = sequence.pad_sequences(url_int_tokens, maxlen=max_len)
         y = np.array(df['class'])
 
         # Cross-validation
-        X_train, X_test, y_train0, y_test0 = model_selection.train_test_split(X, y, test_size=0.2, random_state=33)
+        X_train, X_test, y_train0, y_test0 = model_selection.train_test_split(X, y, test_size=0.1, random_state=33)
 
         # dga class: 0~20: 21개
         y_train = np_utils.to_categorical(y_train0, 21)
