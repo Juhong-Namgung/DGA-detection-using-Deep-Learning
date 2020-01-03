@@ -34,7 +34,7 @@ alexa_labels_str = []
 
 for x in alexa_domains:
     alexa_labels.append(0)
-    alexa_labels.append("Alexa")
+    alexa_labels_str.append("Alexa")
 
 alexa_archive = pd.DataFrame(columns=['domain'])
 alexa_archive['domain'] = alexa_domains
