@@ -10,28 +10,35 @@ dga_labels_dict = {'alexa':0, 'banjori':1, 'tinba':2, 'Post':3, 'ramnit':4, 'nec
               'ramdo':19, 'P2P':20 }
 
 # Process DGA data
-dga_label= []
+dga_labels= []
+dga_labels_str = []
 dga_domains = []
 z = 0
 for x in df_dga['source'].tolist():
     if x in dga_labels_dict:
-        dga_label.append(dga_labels_dict[x])
+        dga_labels.append(dga_labels_dict[x])
+        dga_labels_str.append(df_dga['source'].tolist()[z])
         dga_domains.append(df_dga['domain'].tolist()[z])
     z = z + 1
 
-# Data columns("domain", "class")
+# Data columns("domain", "source", "class")
 dga_archive = pd.DataFrame(columns=['domain'])
-dga_archive["domain"] = dga_domains
-dga_archive['class'] = dga_label
+dga_archive['domain'] = dga_domains
+dga_archive['source'] = dga_labels_str
+dga_archive['class'] = dga_labels
 
 # Process Alexa data
 alexa_domains = df_alexa['domain'].tolist()
 alexa_labels = []
+alexa_labels_str = []
+
 for x in alexa_domains:
     alexa_labels.append(0)
+    alexa_labels.append("Alexa")
 
 alexa_archive = pd.DataFrame(columns=['domain'])
-alexa_archive["domain"] = alexa_domains
+alexa_archive['domain'] = alexa_domains
+alexa_archive['source'] = alexa_labels_str
 alexa_archive['class'] = alexa_labels
 
 # Combine DGA and Alexa data
