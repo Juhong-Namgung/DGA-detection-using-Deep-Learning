@@ -30,7 +30,7 @@ with tf.device("/GPU:0"):
         lstm = Dropout(0.5)(lstm)
 
         # Output layer (last fully connected layer)
-        output = Dense(21, activation='sigmoid', name='output')(lstm)
+        output = Dense(21, activation='softmax', name='output')(lstm)
 
         # Compile model and define optimizer
         model = Model(input=[main_input], output=[output])
