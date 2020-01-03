@@ -38,6 +38,6 @@ alexa_archive['class'] = alexa_labels
 result = pd.concat([dga_archive, alexa_archive])
 
 # Shuffle the data
-result = shuffle(result)
+result = shuffle(result, random_state=33)
 result.to_csv("./dga_label.csv",mode='w',index=False)
 
