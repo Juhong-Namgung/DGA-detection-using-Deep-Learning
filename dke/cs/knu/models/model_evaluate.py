@@ -14,10 +14,10 @@ class Evaluator:
         # validation curves
         epochs = range(1, len(history_dict['loss']) + 1)
         # "bo" is for "blue dot"
-        plt.plot(epochs, history_dict['fmeasure'], 'r',label='f1')
-        plt.plot(epochs, history_dict['precision'], 'g',label='precision')
-        plt.plot(epochs, history_dict['recall'], 'k',label='recall')
-        plt.plot(epochs, history_dict['categorical_accuracy'], 'c', label='categorical_accuracy')
+        plt.plot(epochs, history_dict['val_fmeasure'], 'r',label='f1')
+        plt.plot(epochs, history_dict['val_precision'], 'g',label='precision')
+        plt.plot(epochs, history_dict['val_recall'], 'k',label='recall')
+        plt.plot(epochs, history_dict['val_categorical_accuracy'], 'c', label='categorical_accuracy')
 
         plt.xlabel('Epochs')
         plt.grid()
