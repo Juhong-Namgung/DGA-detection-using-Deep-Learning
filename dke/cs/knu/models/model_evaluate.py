@@ -122,5 +122,6 @@ class Evaluator:
         plt.xlabel('Predicted label\naccuracy={:0.4f}; misclass={:0.4f}'.format(accuracy, misclass))
         now = datetime.now()
         nowDatetime = now.strftime('%Y_%m_%d-%H%M%S')
-
+        figure = plt.gcf()
+        figure.set_size_inches(15, 15)
         plt.savefig('./result/' + model_name + '_confusion_matrix_' + nowDatetime + '.png')
