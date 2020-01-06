@@ -79,8 +79,8 @@ with tf.device("/GPU:0"):
         return model
 
 with tf.device("/GPU:0"):
-    epochs = 10
-    batch_size = 64
+    epochs = 1
+    batch_size = 4096
 
     # Load data using model preprocessor
     preprocess = model_preproecess.Preprocessor()
