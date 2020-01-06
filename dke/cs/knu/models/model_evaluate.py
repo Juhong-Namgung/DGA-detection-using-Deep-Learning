@@ -24,7 +24,7 @@ class Evaluator:
 
         plt.xlabel('Epochs')
         plt.grid()
-        plt.legend(loc=1)
+        plt.legend(loc='lower right')
         #plt.show()
         now = datetime.now()
         nowDatetime = now.strftime('%Y_%m_%d-%H:%M:%S')
