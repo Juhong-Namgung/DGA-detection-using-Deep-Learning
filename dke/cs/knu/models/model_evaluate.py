@@ -125,3 +125,4 @@ class Evaluator:
         figure = plt.gcf()
         figure.set_size_inches(15, 15)
         plt.savefig('./result/' + model_name + '_confusion_matrix_' + nowDatetime + '.png')
+        plt.savefig('./result/' + model_name + '_confusion_matrix_' + nowDatetime + '.png', dpi=100)
