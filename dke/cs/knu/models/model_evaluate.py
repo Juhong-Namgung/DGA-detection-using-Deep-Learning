@@ -1,13 +1,16 @@
 import matplotlib.pyplot as plt
+import numpy as np
 from sklearn import metrics
 from sklearn.metrics import classification_report
-import numpy as np
+from sklearn.metrics import confusion_matrix
+
 
 class Evaluator:
     def __init__(self):
         self.id = 1
 
-    def plot_validation_curves(self, history):
+    # save validation curves(.png format)
+    def plot_validation_curves(self, model_name, history):
         history_dict = history.history
         print(history_dict.keys())
 
@@ -22,10 +25,19 @@ class Evaluator:
         plt.xlabel('Epochs')
         plt.grid()
         plt.legend(loc=1)
-        plt.show()
+        #plt.show()
+        plt.savefig('./result/' + model_name + '_val_curve.png')
 
+    # print validation
+    def print_validation_report(self, history):
+            history_dict = history.history
+
+            for key in history_dict:
+                if "val" in key:
+                    print('[' + key + '] '+ str(history_dict[key]))
+
+    # Calculate measure(categorical accuracy, precision, recall, f1-score)
     def calculate_measrue(self, model, X_test, y_test):
-        # Calculate measure(categorical accuracy, precision, recall, f1-score)
         y_pred_class_prob = model.predict(X_test, batch_size=64)
         y_pred_class = np.argmax(y_pred_class_prob, axis=1)
         y_test_class = np.argmax(y_test, axis=1)
@@ -38,23 +50,71 @@ class Evaluator:
         print ("recall" , metrics.recall_score(y_val_class, y_pred_class, average = 'weighted'))
         print ("f1" , metrics.f1_score(y_val_class, y_pred_class, average = 'weighted'))
 
+    # save confusion matrix(.png)
+    def plot_confusion_matrix(self, model_name, y_true, y_pred,
+                              classes=[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13,14, 15, 16, 17, 18, 19, 20],
+                               normalize=False,
+                               title=None,
+                               cmap=plt.cm.Blues):
+        dga_labels_dict = {'alexa':0, 'banjori':1, 'tinba':2, 'Post':3, 'ramnit':4, 'necurs':5, 'murofet':6, 'qakbot':7, 'shiotob/urlzone/bebloh':8, 'simda':9,
+                           'pykspa':10, 'ranbyus':11, 'dyre':12, 'kraken':13, 'Cryptolocker':14, 'nymaim':15, 'locky':16, 'vawtrak':17, 'shifu':18,
+                           'ramdo':19, 'P2P':20 }
+        classes_str = []
+        for i in classes:
+            for dga_str, dga_int in dga_labels_dict.items():
+                if dga_int == i:
+                    classes_str.append(dga_str)
 
+        y_pred_class = np.argmax(y_pred, axis=1)
+        y_true_class = np.argmax(y_true, axis=1)
 
+        """
+        This function prints and plots the confusion matrix.
+        Normalization can be applied by setting `normalize=True`.
+        """
+        if not title:
+            if normalize:
+                title = 'Normalized confusion matrix'
+            else:
+                title = 'Confusion matrix, without normalization'
 
+        # Compute confusion matrix
+        cm = confusion_matrix(y_true_class, y_pred_class)
+        accuracy = np.trace(cm) / float(np.sum(cm))
+        misclass = 1 - accuracy
+        # Only use the labels that appear in the data
+        #classes = list(classes[unique_labels(y_true, y_pred)])
+        if normalize:
 
+            cm = cm.astype('float') / cm.sum(axis=1)[:, np.newaxis]
+            print("Normalized confusion matrix")
+        else:
+            print('Confusion matrix, without normalization')
 
+        fig, ax = plt.subplots()
+        im = ax.imshow(cm, interpolation='nearest', cmap=cmap)
+        ax.figure.colorbar(im, ax=ax)
+        # We want to show all ticks...
+        ax.set(xticks=np.arange(cm.shape[1]),
+               yticks=np.arange(cm.shape[0]),
+               # ... and label them with the respective list entries
+               xticklabels=classes_str, yticklabels=classes_str,
+               title=title,
+               ylabel='True label',
+               xlabel='Predicted label')
 
+        # Rotate the tick labels and set their alignment.
+        plt.setp(ax.get_xticklabels(), rotation=45, ha="right",
+                 rotation_mode="anchor")
 
-
-
-
-
-
-
-
-
-
-
-
-
-
+        # Loop over data dimensions and create text annotations.
+        fmt = '.3f' if normalize else 'd'
+        thresh = cm.max() / 2.
+        for i in range(cm.shape[0]):
+            for j in range(cm.shape[1]):
+                ax.text(j, i, format(cm[i, j], fmt),
+                        ha="center", va="center",
+                        color="white" if cm[i, j] > thresh else "black")
+        fig.tight_layout()
+        plt.xlabel('Predicted label\naccuracy={:0.4f}; misclass={:0.4f}'.format(accuracy, misclass))
+        plt.savefig('./result/' + model_name + '_confusion_matrix.png')
