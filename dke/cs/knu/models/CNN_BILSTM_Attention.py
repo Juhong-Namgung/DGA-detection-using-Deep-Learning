@@ -80,7 +80,7 @@ with tf.device("/GPU:0"):
 
     X_train, X_test, y_train, y_test = preprocess.load_data()
 
-    # define LSTM with attention model
+    # Define LSTM with attention model
     model_name = "CNN_BILSTM_ATT"
     model = cnn_bidirection_lstm_with_attention()
     history = model.fit(X_train, y_train, epochs=epochs, batch_size=batch_size, validation_split=0.11)
@@ -89,17 +89,18 @@ with tf.device("/GPU:0"):
 
     evaluator = model_evaluate.Evaluator()
 
-    # validation curves
+    # Validation curves
     evaluator.plot_validation_curves(model_name, history)
     evaluator.print_validation_report(history)
 
-    # experimental result
+    # Experimental result
     evaluator.calculate_measrue(model, X_test, y_test)
 
-    #model.summary()
+    # Save confusion matrix
+    evaluator.plot_confusion_matrix(model_name, y_test, y_pred, title='Confusion matrix', normalize=True)
+
+    # model.summary()
 
     # Save final training model
     # preprocess.save_model(model, "../models/" + model_name + ".json", "../models/" + model_name + ".h5")
 
-    # save confusion matrix
-    evaluator.plot_confusion_matrix(model_name, y_test, y_pred, title='Confusion matrix', normalize=True)
