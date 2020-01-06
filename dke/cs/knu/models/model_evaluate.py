@@ -27,7 +27,7 @@ class Evaluator:
         plt.legend(loc='lower right')
         #plt.show()
         now = datetime.now()
-        nowDatetime = now.strftime('%Y_%m_%d-%H:%M:%S')
+        nowDatetime = now.strftime('%Y_%m_%d-%H%M%S')
 
         plt.savefig('./result/' + model_name + '_val_curve_' + nowDatetime + '.png')
 
@@ -121,6 +121,6 @@ class Evaluator:
         fig.tight_layout()
         plt.xlabel('Predicted label\naccuracy={:0.4f}; misclass={:0.4f}'.format(accuracy, misclass))
         now = datetime.now()
-        nowDatetime = now.strftime('%Y_%m_%d-%H:%M:%S')
+        nowDatetime = now.strftime('%Y_%m_%d-%H%M%S')
 
         plt.savefig('./result/' + model_name + '_confusion_matrix_' + nowDatetime + '.png')
