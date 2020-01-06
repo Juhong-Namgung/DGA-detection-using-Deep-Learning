@@ -124,4 +124,4 @@ class Evaluator:
         nowDatetime = now.strftime('%Y_%m_%d-%H%M%S')
         figure = plt.gcf()
         figure.set_size_inches(15, 15)
-        plt.savefig('./result/' + model_name + '_confusion_matrix_' + nowDatetime + '.png')
+        plt.savefig('./result/' + model_name + '_confusion_matrix_' + nowDatetime + '.png', dpi=100)
