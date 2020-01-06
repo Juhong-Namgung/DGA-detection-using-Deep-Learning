@@ -49,19 +49,25 @@ with tf.device("/GPU:0"):
     X_train, X_test, y_train, y_test = preprocess.load_data()
 
     # define CNN model
+    model_name = "LSTM"
     model = simple_lstm()
     history = model.fit(X_train, y_train, epochs=epochs, batch_size=batch_size, validation_split=0.11)
 
+    y_pred = model.predict(X_test, batch_size=64)
+
     evaluator = model_evaluate.Evaluator()
 
-    # validation curves
-    #evaluator.plot_validation_curves(history)
+    # Validation curves
+    evaluator.plot_validation_curves(model_name, history)
+    evaluator.print_validation_report(history)
 
-    # experimental result
+    # Experimental result
     evaluator.calculate_measrue(model, X_test, y_test)
+
+    # Save confusion matrix
+    evaluator.plot_confusion_matrix(model_name, y_test, y_pred, title='Confusion matrix', normalize=True)
 
     # model.summary()
 
     # Save final training model
-    # model_name = "LSTM"
     # preprocess.save_model(model, "../models/" + model_name + ".json", "../models/" + model_name + ".h5")
