@@ -3,7 +3,7 @@ import numpy as np
 from sklearn import metrics
 from sklearn.metrics import classification_report
 from sklearn.metrics import confusion_matrix
-
+from datetime import datetime
 
 class Evaluator:
     def __init__(self):
@@ -26,7 +26,10 @@ class Evaluator:
         plt.grid()
         plt.legend(loc=1)
         #plt.show()
-        plt.savefig('./result/' + model_name + '_val_curve.png')
+        now = datetime.now()
+        nowDatetime = now.strftime('%Y_%m_%d-%H:%M:%S')
+
+        plt.savefig('./result/' + model_name + '_val_curve_' + nowDatetime + '.png')
 
     # print validation
     def print_validation_report(self, history):
@@ -117,4 +120,7 @@ class Evaluator:
                         color="white" if cm[i, j] > thresh else "black")
         fig.tight_layout()
         plt.xlabel('Predicted label\naccuracy={:0.4f}; misclass={:0.4f}'.format(accuracy, misclass))
-        plt.savefig('./result/' + model_name + '_confusion_matrix.png')
+        now = datetime.now()
+        nowDatetime = now.strftime('%Y_%m_%d-%H:%M:%S')
+
+        plt.savefig('./result/' + model_name + '_confusion_matrix_' + nowDatetime + '.png')
