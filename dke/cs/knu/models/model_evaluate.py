@@ -43,15 +43,14 @@ class Evaluator:
     def calculate_measrue(self, model, X_test, y_test):
         y_pred_class_prob = model.predict(X_test, batch_size=64)
         y_pred_class = np.argmax(y_pred_class_prob, axis=1)
-        y_test_class = np.argmax(y_test, axis=1)
-        y_val_class = y_test_class
+        y_true_class = np.argmax(y_test, axis=1)
 
         # classification report(sklearn)
-        print(classification_report(y_val_class, y_pred_class, digits=4))
+        print(classification_report(y_true_class, y_pred_class, digits=4))
 
-        print ("precision" , metrics.precision_score(y_val_class, y_pred_class, average = 'weighted'))
-        print ("recall" , metrics.recall_score(y_val_class, y_pred_class, average = 'weighted'))
-        print ("f1" , metrics.f1_score(y_val_class, y_pred_class, average = 'weighted'))
+        print ("precision" , metrics.precision_score(y_true_class, y_pred_class, average = 'weighted'))
+        print ("recall" , metrics.recall_score(y_true_class, y_pred_class, average = 'weighted'))
+        print ("f1" , metrics.f1_score(y_true_class, y_pred_class, average = 'weighted'))
 
     # save confusion matrix(.png)
     def plot_confusion_matrix(self, model_name, y_true, y_pred,
@@ -119,10 +118,15 @@ class Evaluator:
                         ha="center", va="center",
                         color="white" if cm[i, j] > thresh else "black")
         fig.tight_layout()
-        plt.xlabel('Predicted label\naccuracy={:0.4f}; misclass={:0.4f}'.format(accuracy, misclass))
+
+        precision = metrics.precision_score(y_true_class, y_pred_class, average = 'weighted')
+        recall = metrics.recall_score(y_true_class, y_pred_class, average = 'weighted')
+        f1 = metrics.f1_score(y_true_class, y_pred_class, average = 'weighted')
+
+        plt.xlabel('Predicted label\naccuracy={:0.4f}; precision={:0.4f}; recall={:0.4f}; f1={:0.4f}; misclass={:0.4f}'
+                   .format(accuracy, precision, recall, f1, misclass))
         now = datetime.now()
         nowDatetime = now.strftime('%Y_%m_%d-%H%M%S')
         figure = plt.gcf()
         figure.set_size_inches(15, 15)
-        plt.savefig('./result/' + model_name + '_confusion_matrix_' + nowDatetime + '.png')
         plt.savefig('./result/' + model_name + '_confusion_matrix_' + nowDatetime + '.png', dpi=100)
