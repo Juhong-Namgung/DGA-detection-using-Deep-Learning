@@ -49,7 +49,7 @@ with tf.device("/GPU:0"):
     X_train, X_test, y_train, y_test = preprocess.load_data()
 
     # define CNN model
-    model_name = "LSTM"
+    model_name = "LSTM_early"
     model = simple_lstm()
 
     # Define early stopping

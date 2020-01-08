@@ -61,14 +61,14 @@ with tf.device("/GPU:0"):
     X_train, X_test, y_train, y_test = preprocess.load_data()
 
     # define LSTM with attention model
-    model_name = "LSTM_ATT"
+    model_name = "LSTM_ATT_early"
     model = lstm_with_attention()
 
     # Define early stopping
     es = EarlyStopping(monitor='val_loss', mode='min', verbose=1, patience=3)
     mc = ModelCheckpoint('./trained_model/' + model_name+ '.h5', monitor='val_loss', mode='min', save_best_only=True)
 
-    history = model.fit(X_train, y_train, epochs=epochs, batch_size=batch_size, validation_split=0.11)
+    history = model.fit(X_train, y_train, epochs=epochs, batch_size=batch_size, validation_split=0.11, callbacks=[es, mc])
 
     saved_model = load_model('./trained_model/' + model_name+ '.h5', compile=False)
     y_pred = saved_model.predict(X_test, batch_size=64)

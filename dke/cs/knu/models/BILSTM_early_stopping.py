@@ -57,7 +57,7 @@ with tf.device("/GPU:0"):
     es = EarlyStopping(monitor='val_loss', mode='min', verbose=1, patience=3)
     mc = ModelCheckpoint('./trained_model/' + model_name+ '.h5', monitor='val_loss', mode='min', save_best_only=True)
 
-    history = model.fit(X_train, y_train, epochs=epochs, batch_size=batch_size, validation_split=0.11)
+    history = model.fit(X_train, y_train, epochs=epochs, batch_size=batch_size, validation_split=0.11, callbacks=[es, mc])
 
     y_pred = model.predict(X_test, batch_size=64)
 
