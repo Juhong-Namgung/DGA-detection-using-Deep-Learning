@@ -93,7 +93,7 @@ with tf.device("/GPU:0"):
 
     history = model.fit(X_train, y_train, epochs=epochs, batch_size=batch_size, validation_split=0.11, callbacks=[es, mc])
 
-    saved_model = load_model('./trained_model/' + model_name+ '.h5', compile=False)
+    saved_model = load_model('./trained_model/' + model_name+ '.h5', compile=False, custom_objects={'SeqSelfAttention':SeqSelfAttention})
     y_pred = saved_model.predict(X_test, batch_size=64)
 
     evaluator = model_evaluate.Evaluator()
