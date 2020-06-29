@@ -230,19 +230,19 @@ with tf.device("/GPU:0"):
 
 # save validation curves(.png format)
 def plot_validation_curves(historys, names):
-    losses = []
-    for history in historys:
-        losses.append(history.history['loss'])
+    # losses = []
+    # for history in historys:
+    #     losses.append(history.history['loss'])
 
-    epochs = range(1, 11)
+    epochs = range(1, 21)
     i = 0
     for name in names:
-        plt.plot(epochs, losses[i], label=name)
+        plt.plot(epochs, historys[i], label=name)
         i = i + 1
 
     plt.xlabel('Epochs')
     plt.grid()
-    plt.legend(loc='lower right')
+    plt.legend(loc='upper right')
     #plt.show()
     now = datetime.now()
     nowDatetime = now.strftime('%Y_%m_%d-%H%M%S')
@@ -250,7 +250,7 @@ def plot_validation_curves(historys, names):
     plt.savefig('./result/' + 'all_val_curve_' + nowDatetime + '.png')
 
 with tf.device("/GPU:0"):
-    epochs = 10
+    epochs = 20
     batch_size = 64
 
     # Load data using model preprocessor
@@ -259,17 +259,19 @@ with tf.device("/GPU:0"):
     X_train, X_test, y_train, y_test = preprocess.load_data()
 
     # define all models
-    models_name = ["CNN", "LSTM", "BILSTM", "LSTM_ATT", "BILSTM_ATT", "CNN_BILSTM_ATT"]
-    #models_name = ["CNN", "BILSTM", "LSTM_ATT"]
-    models = [conv_fully(), simple_lstm(), bidirectional_lstm(), lstm_with_attention(), bidirection_lstm_with_attention(), cnn_bidirection_lstm_with_attention()]
-    historys = []
-    for model in models:
-        historys.append(model.fit(X_train, y_train, epochs=epochs, batch_size=batch_size, validation_split=0.11))
-        print('===========================================================================================================================================================================')
-        print('===========================================================================================================================================================================')
-        print()
-        print()
-    plot_validation_curves(historys, models_name)
+    # models_name = ['CNN', 'LSTM', 'BILSTM', 'LSTM_ATT', 'BILSTM_ATT', 'CNN_BILSTM_ATT']
+    # models = [conv_fully(), simple_lstm(), bidirectional_lstm(), lstm_with_attention(), bidirection_lstm_with_attention(), cnn_bidirection_lstm_with_attention()]
+    models_name = ['CNN', 'LSTM_ATT', 'BILSTM_ATT', 'CNN_BILSTM_ATT']
+    models = [conv_fully(), lstm_with_attention(), bidirection_lstm_with_attention(), cnn_bidirection_lstm_with_attention()]
 
-    
+    categorical_accuracy_historys = []
+    loss_historys = []
+    i = 0
+    models_name = list(reversed(models_name))
+    for model in reversed(models):
+        history = model.fit(X_train, y_train, epochs=epochs, batch_size=batch_size, validation_split=0.11)
+        loss_historys.append(history.history['loss'])
+        print('End ' + str(models_name[i]))
+        i = i + 1
 
+    plot_validation_curves(loss_historys, models_name)

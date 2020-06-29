@@ -31,7 +31,7 @@ with tf.device("/GPU:0"):
         # Conv layer
         conv = Convolution1D(kernel_size=kernel_size, filters=filters, border_mode='same')(emb)
         conv = ELU()(conv)
-        #conv = MaxPooling1D(5)(conv)
+        conv = MaxPooling1D(5)(conv)
         #conv = Lambda(sum_1d, output_shape=(filters,))(conv)
         conv = Dropout(0.5)(conv)
         return conv
@@ -57,13 +57,22 @@ with tf.device("/GPU:0"):
         cnnlstm_merged = concatenate([merged, att])
         cnnlstm_merged = Flatten()(cnnlstm_merged)
 
-        hidden1 = Dense(640)(cnnlstm_merged)
-        hidden1 = ELU()(hidden1)
+        hidden1 = Dense(24640)(cnnlstm_merged)
         hidden1 = BatchNormalization(mode=0)(hidden1)
         hidden1 = Dropout(0.5)(hidden1)
 
+        hidden2 = Dense(6160)(hidden1)
+        hidden2 = ELU()(hidden2)
+        hidden2 = BatchNormalization(mode=0)(hidden2)
+        hidden2 = Dropout(0.5)(hidden2)
+
+        hidden3 = Dense(1540)(hidden2)
+        hidden3 = ELU()(hidden3)
+        hidden3 = BatchNormalization(mode=0)(hidden3)
+        hidden3 = Dropout(0.5)(hidden3)
+
         # Output layer (last fully connected layer)
-        output = Dense(21, activation='softmax', name='output')(hidden1)
+        output = Dense(21, activation='softmax', name='output')(hidden3)
 
         # Compile model and define optimizer
         model = Model(input=[main_input], output=[output])
