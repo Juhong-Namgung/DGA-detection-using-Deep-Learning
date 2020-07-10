@@ -200,13 +200,14 @@ class Evaluator:
         plt.cla()
 
     @staticmethod
-    def plot_roc_curves(model, model_name, y_true, y_pred):
+    def plot_roc_curves(model_name, y_true, y_pred):
 
         fpr = dict()
         tpr = dict()
         roc_auc = dict()
         n_classes = 16
 
+        # Calculate fpr , tpr, and roc(each class, micro, macro)
         for i in range(n_classes):
             fpr[i], tpr[i], _ = metrics.roc_curve(y_true[:, i], y_pred[:, i])
             roc_auc[i] = metrics.auc(fpr[i], tpr[i])
