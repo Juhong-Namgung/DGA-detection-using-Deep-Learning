@@ -102,7 +102,8 @@ class Evaluator:
         y_true_class = np.argmax(y_test, axis=1)
 
         # classification report(sklearn)
-        print(classification_report(y_true_class, y_pred_class, labels=[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15] ,digits=4))
+        print(classification_report(y_true_class, y_pred_class, digits=4,
+                                    labels=[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20]))
 
         print("weighted_precision" , metrics.precision_score(y_true_class, y_pred_class, average='weighted'))
         print("weighted_recall" , metrics.recall_score(y_true_class, y_pred_class, average='weighted'))
@@ -118,15 +119,16 @@ class Evaluator:
 
     @staticmethod
     def plot_confusion_matrix(model_name, y_true, y_pred,
-                              classes=[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15],
+                              classes=[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20],
                               normalize=True,
                               title=None,
                               cmap=plt.cm.Blues):
         """Save confusion matrix(.png) """
 
-        dga_labels_dict = {'Alexa':0, 'tinba':1, 'Post':2, 'ramnit':3, 'necurs':4, 'qakbot':5, 'murofet':6,
-                           'shiotob/urlzone/bebloh':7, 'monerodownloader':8, 'ranbyus':9, 'kraken':10, 'dyre':11,
-                           'Cryptolocker':12, 'locky':13, 'vawtrak':14, 'P2P':15 }
+        dga_labels_dict = {'Alexa':0, 'banjori':1, 'qsnatch':2, 'tinba':3, 'Post':4, 'ramnit':5, 'qakbot':6,
+                           'necurs':7, 'murofet':8, 'shiotob/urlzone/bebloh':9, 'monerodownloader':10, 'simda':11,
+                           'ranbyus':12, 'pykspa':13, 'kraken':14, 'dyre':15 , 'nymaim':16, 'Cryptolocker': 17, 'locky': 18,
+                           'vawtrak':19, 'qadars':20}
         classes_str = []
         for i in classes:
             for dga_str, dga_int in dga_labels_dict.items():
@@ -229,6 +231,9 @@ class Evaluator:
         colors = cycle(['blue', 'red', 'green'])
 
         for i, color in zip(range(3), colors):
+            plt.plot(fpr[i], tpr[i], color=color, label='ROC curve of class {0} (AUC = {1:0.4f})' ''.format(i, roc_auc[i]))
+
+        for i, color in zip(range(18, 21), colors):
             plt.plot(fpr[i], tpr[i], color=color, label='ROC curve of class {0} (AUC = {1:0.4f})' ''.format(i, roc_auc[i]))
 
         plt.plot(fpr["micro"], tpr["micro"], linestyle='-',

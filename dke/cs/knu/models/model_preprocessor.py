@@ -25,8 +25,8 @@ class Preprocessor:
         # Cross validation
         x_train, x_test, y_train, y_test = model_selection.train_test_split(x, y, test_size=0.1, random_state=33)
 
-        # DGA class: 0~15
-        y_train_category = tf.keras.utils.to_categorical(y_train, 16)
-        y_test_category = tf.keras.utils.to_categorical(y_test, 16)
+        # DGA class: 0~21
+        y_train_category = tf.keras.utils.to_categorical(y_train, 21)
+        y_test_category = tf.keras.utils.to_categorical(y_test, 21)
 
         return x_train, x_test, y_train_category, y_test_category
