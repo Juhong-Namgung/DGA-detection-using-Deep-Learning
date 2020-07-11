@@ -29,8 +29,8 @@ print(source_counts)
 
 dga_classes_dict = dict()
 
-for i in range(15):
-    # top 15 class
+for i in range(20):
+    # top 20 class
     dga_classes_dict[source_counts.index[i]] = i + 1
 
 print(dga_classes_dict)
@@ -43,7 +43,7 @@ def is_class(source):
 def extract_class(source):
     return dga_classes_dict[source]
 
-# Use only top 15 class domain
+# Use only top 20 class domain
 dga_archive = dga_archive[dga_archive['source'].map(is_class)]
 dga_archive['class'] = dga_archive['source'].map(extract_class)
 
