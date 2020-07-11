@@ -82,9 +82,9 @@ model.compile(optimizer=adam, loss=tf.keras.losses.CategoricalCrossentropy(from_
 
               metrics=[tf.keras.metrics.CategoricalAccuracy(),
                        tf.keras.metrics.Precision(), tf.keras.metrics.Recall(),
-                       tfa.metrics.F1Score(num_classes=16, average='weighted', name="f1_score_weighted"),
-                       tfa.metrics.F1Score(num_classes=16, average='micro', name="f1_score_micro"),
-                       tfa.metrics.F1Score(num_classes=16, average='macro', name="f1_score_macro")])
+                       tfa.metrics.F1Score(num_classes=21, average='weighted', name="f1_score_weighted"),
+                       tfa.metrics.F1Score(num_classes=21, average='micro', name="f1_score_micro"),
+                       tfa.metrics.F1Score(num_classes=21, average='macro', name="f1_score_macro")])
 
 history = model.fit(x_train, y_train, epochs=epochs, batch_size=batch_size, validation_split=0.11, callbacks=[model_checkpoint_callback])
 
