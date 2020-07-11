@@ -55,7 +55,7 @@ def conv_fully(max_len=74, emb_dim=32, max_vocab_len=40, W_reg=tf.keras.regulari
     hidden2 = layers.BatchNormalization()(hidden2)
     hidden2 = layers.Dropout(0.5)(hidden2)
 
-    main_output = layers.Dense(16, activation='softmax')(hidden2)
+    main_output = layers.Dense(21, activation='softmax')(hidden2)
 
     cnn_model = tf.keras.Model(inputs=main_input, outputs=main_output)
 
