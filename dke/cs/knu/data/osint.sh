@@ -1,10 +1,13 @@
 #!/bin/bash
 
-wget https://osint.bambenekconsulting.com/feeds/dga-feed.txt
+#wget https://osint.bambenekconsulting.com/feeds/dga-feed.txt
+wget https://osint.bambenekconsulting.com/feeds/dga-feed.gz
 
-sed -n "16,\$p" dga-feed.txt > dga.txt
+gzip -d dga-feed.gz
 
-rm dga-feed.txt
+sed -n "16,\$p" dga-feed > dga.txt
+
+rm dga-feed
 
 :<<'END'
 echo "domain,label" > dga.csv
