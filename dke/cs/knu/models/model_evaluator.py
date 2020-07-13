@@ -207,7 +207,7 @@ class Evaluator:
         fpr = dict()
         tpr = dict()
         roc_auc = dict()
-        n_classes = 16
+        n_classes = 21
 
         # Calculate fpr , tpr, and roc(each class, micro, macro)
         for i in range(n_classes):
