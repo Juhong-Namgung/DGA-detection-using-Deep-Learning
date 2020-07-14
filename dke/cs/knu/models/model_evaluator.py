@@ -57,8 +57,9 @@ class Evaluator:
         epochs = range(1, len(history_dict['loss']) + 1)
         # "bo" is for "blue dot"
         plt.plot(epochs, history_dict['val_f1_score_weighted'], 'r',label='F1')
-        plt.plot(epochs, history_dict['val_precision'], 'g',label='precision')
-        plt.plot(epochs, history_dict['val_recall'], 'k',label='recall')
+        # plt.plot(epochs, history_dict['val_precision'], 'g',label='precision')
+        # plt.plot(epochs, history_dict['val_recall'], 'k',label='recall')
+        plt.plot(epochs, history_dict['val_loss'], 'k', label='loss')
         plt.plot(epochs, history_dict['val_categorical_accuracy'], 'c', label='categorical_accuracy')
 
         plt.xlabel('Epochs')
@@ -233,24 +234,27 @@ class Evaluator:
         for i, color in zip(range(3), colors):
             plt.plot(fpr[i], tpr[i], color=color, label='ROC curve of class {0} (AUC = {1:0.4f})' ''.format(i, roc_auc[i]))
 
-        for i, color in zip(range(18, 21), colors):
-            plt.plot(fpr[i], tpr[i], color=color, label='ROC curve of class {0} (AUC = {1:0.4f})' ''.format(i, roc_auc[i]))
+        for i, color in zip(range(18, 21), cycle(['c', 'm', 'y'])):
+            plt.plot(fpr[i], tpr[i], linestyle='-.', color=color, label='ROC curve of class {0} (AUC = {1:0.4f})' ''.format(i, roc_auc[i]))
 
-        plt.plot(fpr["micro"], tpr["micro"], linestyle='-',
+        plt.plot(fpr["micro"], tpr["micro"], linestyle='--',
                  label='ROC curve of micro-average (AUC = {0:0.4f})' ''.format(roc_auc["micro"]))
 
         plt.plot(fpr["macro"], tpr["macro"], linestyle='--',
                  label='ROC curve of macro-average (AUC = {0:0.4f})' ''.format(roc_auc["macro"]))
 
-        # plt.plot([0, 1], [0, 1], 'k--')   # base line
+        plt.plot([0, 1], [0, 1], 'k--')   # base line
         plt.xlim([0.00001, 1.0])
         plt.xscale('log')
         plt.ylim([0.0, 1.05])
         plt.xlabel('False Positive Rate')
         plt.ylabel('True Positive Rate')
         plt.title('Receiver Operating Characteristic(ROC Curve)')
-        plt.legend(loc="lower right")
+        ax = plt.subplot()
+        plt.legend(loc="right", bbox_to_anchor=(2, 0.2))
+        plt.tight_layout()
+        plt.subplots_adjust(right=0.7)
         # plt.show()
         now = datetime.now()
         now_datetime = now.strftime('%Y_%m_%d-%H%M%S')
-        plt.savefig('./result/' + model_name + '_roc_curve_' + now_datetime + '.png', dpi=100)
+        plt.savefig('./result/' + model_name + '_roc_curve_' + now_datetime + '.png', dpi=500, bbox_inches="tight")
