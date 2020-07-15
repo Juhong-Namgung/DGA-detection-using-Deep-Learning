@@ -4,7 +4,7 @@ from itertools import cycle
 
 import matplotlib.pyplot as plt
 import numpy as np
-import tensorflow.keras.backend as K
+from keras import backend as K
 from sklearn import metrics
 from sklearn.metrics import classification_report
 from sklearn.metrics import confusion_matrix
@@ -56,7 +56,7 @@ class Evaluator:
         # validation curves
         epochs = range(1, len(history_dict['loss']) + 1)
         # "bo" is for "blue dot"
-        plt.plot(epochs, history_dict['val_f1_score_weighted'], 'r',label='F1')
+        plt.plot(epochs, history_dict['val_fmeasure'], 'r',label='F1')
         # plt.plot(epochs, history_dict['val_precision'], 'g',label='precision')
         # plt.plot(epochs, history_dict['val_recall'], 'k',label='recall')
         plt.plot(epochs, history_dict['val_loss'], 'k', label='loss')
@@ -73,18 +73,18 @@ class Evaluator:
 
         plt.close()
 
-        plt.plot(epochs, history_dict['val_f1_score_weighted'], 'r',label='F1_Weighted')
-        plt.plot(epochs, history_dict['val_f1_score_micro'], 'g',label='F1_Micro')
-        plt.plot(epochs, history_dict['val_f1_score_macro'], 'k',label='F1_Macro')
-
-        plt.xlabel('Epochs')
-        plt.grid()
-        plt.legend(loc='lower right')
-        #plt.show()
-        time.sleep(5)
-        now = datetime.now()
-        now_datetime = now.strftime('%Y_%m_%d-%H%M%S')
-        plt.savefig('./result/' + model_name + '_val_curve_' + now_datetime + '.png')
+        # plt.plot(epochs, history_dict['val_f1_score_weighted'], 'r',label='F1_Weighted')
+        # plt.plot(epochs, history_dict['val_f1_score_micro'], 'g',label='F1_Micro')
+        # plt.plot(epochs, history_dict['val_f1_score_macro'], 'k',label='F1_Macro')
+        #
+        # plt.xlabel('Epochs')
+        # plt.grid()
+        # plt.legend(loc='lower right')
+        # #plt.show()
+        # time.sleep(5)
+        # now = datetime.now()
+        # now_datetime = now.strftime('%Y_%m_%d-%H%M%S')
+        # plt.savefig('./result/' + model_name + '_val_curve_' + now_datetime + '.png')
 
     def print_validation_report(history):
             """Print validation history """

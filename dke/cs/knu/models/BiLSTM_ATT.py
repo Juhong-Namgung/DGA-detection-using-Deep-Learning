@@ -1,38 +1,41 @@
 import warnings
 
 import tensorflow as tf
-import tensorflow_addons as tfa
 from model_evaluator import Evaluator
 from model_preprocessor import Preprocessor
-from tensorflow.compat.v1 import ConfigProto
-from tensorflow.compat.v1 import InteractiveSession
-from tensorflow.keras import layers
-from keras_self_attention import SeqSelfAttention
+from keras import backend as K
+from keras import regularizers
+from keras.callbacks import ModelCheckpoint
+from keras.layers import Embedding, LSTM, Bidirectional
+from keras.layers.core import Dense, Dropout, Flatten
+from keras.models import Sequential
+from keras.optimizers import Adam
 import os
+from keras_self_attention import SeqSelfAttention
 os.environ['TF_KERAS'] = '1'
-os.environ["PATH"] += os.pathsep + 'C:/Program Files (x86)/Graphviz2.38/bin/'
 
 # GPU memory setting
-config = ConfigProto()
-config.gpu_options.allow_growth = True
-session = InteractiveSession(config=config)
+config = tf.ConfigProto()
+config.gpu_options.per_process_gpu_memory_fraction = 0.9
+K.tensorflow_backend.set_session(tf.Session(config=config))
+
 
 warnings.filterwarnings('ignore')
 
 
-def bilstm_with_attention(max_len=74, emb_dim=32, max_vocab_len=40, W_reg=tf.keras.regularizers.l2(1e-4)):
+def bilstm_with_attention(max_len=74, emb_dim=32, max_vocab_len=40, W_reg=regularizers.l2(1e-4)):
     # """Bidirectional LSTM with Attention model with the Keras Sequential API"""
 
-    model = tf.keras.Sequential()
-    model.add(layers.Embedding(input_dim=max_vocab_len, output_dim=emb_dim, input_length=max_len, embeddings_regularizer=W_reg))
-    model.add(layers.Dropout(0.2))
-    model.add(layers.Bidirectional(layers.LSTM(units=128, return_sequences=True)))
-    model.add(layers.Dropout(0.5))
-    model.add(layers.Layer(SeqSelfAttention(attention_activation='relu')))
-    model.add(layers.Flatten())
-    model.add(layers.Dense(9472, activation='relu'))
-    model.add(layers.Dropout(0.5))
-    model.add(layers.Dense(21, activation='softmax'))
+    model = Sequential()
+    model.add(Embedding(input_dim=max_vocab_len, output_dim=emb_dim, input_length=max_len, W_regularizer=W_reg))
+    model.add(Dropout(0.2))
+    model.add(Bidirectional(LSTM(units=128, return_sequences=True)))
+    model.add(Dropout(0.5))
+    model.add(SeqSelfAttention(attention_activation='relu'))
+    model.add(Flatten())
+    model.add(Dense(9472, activation='relu'))
+    model.add(Dropout(0.5))
+    model.add(Dense(21, activation='softmax'))
 
     return model
 
@@ -47,18 +50,14 @@ tf.keras.utils.plot_model(model, to_file="./result/" + model_name + '.png', show
 
 epochs = 10
 batch_size = 64
-adam = tf.keras.optimizers.Adam(learning_rate=1e-4, beta_1=0.9, beta_2=0.999, epsilon=1e-08)
+adam = Adam(learning_rate=1e-4, beta_1=0.9, beta_2=0.999, epsilon=1e-08)
 checkpoint_filepath = './tmp/checkpoint/' +  model_name + '.hdf5'
-model_checkpoint_callback = tf.keras.callbacks.ModelCheckpoint(filepath=checkpoint_filepath, monitor='val_loss',
+model_checkpoint_callback = ModelCheckpoint(filepath=checkpoint_filepath, monitor='val_loss',
                                                                save_best_only=True, mode='auto')
 
-model.compile(optimizer=adam, loss=tf.keras.losses.CategoricalCrossentropy(from_logits=True),
-
-              metrics=[tf.keras.metrics.CategoricalAccuracy(),
-                       tf.keras.metrics.Precision(), tf.keras.metrics.Recall(),
-                       tfa.metrics.F1Score(num_classes=21, average='weighted', name="f1_score_weighted"),
-                       tfa.metrics.F1Score(num_classes=21, average='micro', name="f1_score_micro"),
-                       tfa.metrics.F1Score(num_classes=21, average='macro', name="f1_score_macro")])
+model.compile(optimizer=adam, loss='categorical_crossentropy',
+              metrics=['accuracy', tf.keras.metrics.CategoricalAccuracy(),
+                       Evaluator.precision, Evaluator.recall, Evaluator.fmeasure])
 
 history = model.fit(x_train, y_train, epochs=epochs, batch_size=batch_size, validation_split=0.11, callbacks=[model_checkpoint_callback])
 
