@@ -18,8 +18,6 @@ os.environ['TF_KERAS'] = '1'
 config = tf.ConfigProto()
 config.gpu_options.per_process_gpu_memory_fraction = 0.9
 K.tensorflow_backend.set_session(tf.Session(config=config))
-
-
 warnings.filterwarnings('ignore')
 
 
@@ -46,7 +44,7 @@ model = bigru_with_attention()
 model.summary()
 
 # Plot model(.png)
-tf.keras.utils.plot_model(model, to_file="./result/" + model_name + '.png', show_shapes=True)
+#tf.keras.utils.plot_model(model, to_file="./result/" + model_name + '.png', show_shapes=True)
 
 epochs = 10
 batch_size = 64

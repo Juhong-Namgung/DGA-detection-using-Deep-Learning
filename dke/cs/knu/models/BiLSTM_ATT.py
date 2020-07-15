@@ -18,8 +18,6 @@ os.environ['TF_KERAS'] = '1'
 config = tf.ConfigProto()
 config.gpu_options.per_process_gpu_memory_fraction = 0.9
 K.tensorflow_backend.set_session(tf.Session(config=config))
-
-
 warnings.filterwarnings('ignore')
 
 

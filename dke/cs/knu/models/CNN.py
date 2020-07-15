@@ -74,9 +74,9 @@ model.summary()
 
 epochs = 10
 batch_size = 64
-adam = tf.keras.optimizers.Adam(learning_rate=1e-4, beta_1=0.9, beta_2=0.999, epsilon=1e-08)
+adam = Adam(learning_rate=1e-4, beta_1=0.9, beta_2=0.999, epsilon=1e-08)
 checkpoint_filepath = './tmp/checkpoint/' +  model_name + '.hdf5'
-model_checkpoint_callback = tf.keras.callbacks.ModelCheckpoint(filepath=checkpoint_filepath, monitor='val_loss',
+model_checkpoint_callback = ModelCheckpoint(filepath=checkpoint_filepath, monitor='val_loss',
                                                                save_best_only=True, mode='auto')
 
 model.compile(optimizer=adam, loss='categorical_crossentropy',
