@@ -29,7 +29,8 @@ def bigru_with_attention(max_len=74, emb_dim=32, max_vocab_len=40, W_reg=regular
     model.add(Dropout(0.2))
     model.add(Bidirectional(GRU(units=128, return_sequences=True)))
     model.add(Dropout(0.5))
-    model.add(SeqSelfAttention(attention_activation='relu'))
+    model.add(SeqSelfAttention(attention_activation='softmax'))
+    # model.add(SeqSelfAttention(attention_activation='relu'))
     model.add(Flatten())
     model.add(Dense(9472, activation='relu'))
     model.add(Dropout(0.5))
@@ -63,6 +64,7 @@ model.load_weights(checkpoint_filepath)   # Error in Windows environment
 
 # Validation curves
 Evaluator.plot_validation_curves(model_name, history)
+
 
 y_pred = model.predict(x_test, batch_size=64)
 
