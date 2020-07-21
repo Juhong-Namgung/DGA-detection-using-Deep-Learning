@@ -31,7 +31,7 @@ def gen_eda(x_train, y_train, alpha=0.1, num_aug=4):
 
         # bottom 5 classes
         if label >= 16:
-            x_train_aug = np.append(x_train_aug, eda(x_train[i], alpha=alpha, num_aug=num_aug), axis=0)
+            x_train_aug = np.append(x_train_aug, eda(x_train[i], alpha_rs=alpha, num_aug=num_aug), axis=0)
             for k in range(num_aug + 1):
                 y_train_aug = np.append(y_train_aug, np.array(label))
 
