@@ -2,6 +2,7 @@ from eda import *
 import numpy as np
 import argparse
 import tensorflow as tf
+from collections import Counter
 
 ap = argparse.ArgumentParser()
 ap.add_argument("--num_aug", required=False, type=int, help="number of augmented domains per original domain")
@@ -36,5 +37,8 @@ def gen_eda(x_train, y_train, alpha=0.1, num_aug=4):
                 y_train_aug = np.append(y_train_aug, np.array(label))
 
     y_train_aug = tf.keras.utils.to_categorical(y_train_aug, 21)
+
+    print('Before Augmentation: ', Counter(np.argmax(y_train, axis=1)))
+    print('After Augmentation: ', Counter(np.argmax(y_train_aug, axis=1)))
 
     return x_train_aug, y_train_aug
