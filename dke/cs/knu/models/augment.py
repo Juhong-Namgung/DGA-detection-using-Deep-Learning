@@ -32,9 +32,15 @@ def gen_eda(x_train, y_train, alpha=0.1, num_aug=4):
 
         # bottom 5 classes
         if label >= 16:
-            x_train_aug = np.append(x_train_aug, eda(x_train[i], alpha_rs=alpha, num_aug=num_aug), axis=0)
-            for k in range(num_aug + 1):
-                y_train_aug = np.append(y_train_aug, np.array(label))
+            new_aug = eda(x_train[i], alpha_rs=alpha, num_aug=num_aug)
+            if new_aug != []:
+                x_train_aug = np.append(x_train_aug, new_aug, axis=0)
+
+                if num_aug >= 1:
+                    for k in range(num_aug):
+                        y_train_aug = np.append(y_train_aug, np.array(label))
+                else:
+                    y_train_aug = np.append(y_train_aug, np.array(label))
 
     y_train_aug = tf.keras.utils.to_categorical(y_train_aug, 21)
 

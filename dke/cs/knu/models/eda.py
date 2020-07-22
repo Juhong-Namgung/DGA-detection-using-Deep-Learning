@@ -61,7 +61,7 @@ def eda(domain, alpha_rs=0.1, num_aug=3):
     num_chars = 40
 
     augmented_domains = np.array(domain).reshape(1, 74)
-    # print(augmented_domains)
+
     num_new_per_technique = int(num_aug / 1) + 1    # int(num_aug / 4) + 1
     n_rs = max(1, int(alpha_rs * num_chars))
 
@@ -79,7 +79,5 @@ def eda(domain, alpha_rs=0.1, num_aug=3):
     else:
         keep_prob = num_aug / len(augmented_domains)
         augmented_domains = [s for s in augmented_domains if random.uniform(0, 1) < keep_prob]
-
-    augmented_domains = np.append(augmented_domains, np.array(domain).reshape(1, 74), axis=0)
 
     return augmented_domains
